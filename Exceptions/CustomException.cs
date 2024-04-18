@@ -2,7 +2,7 @@
 
 namespace JalaTodoApi.Exceptions;
 
-public class ApiException(HttpStatusCode statusCode, string message) : Exception(message)
+public class CustomException(HttpStatusCode statusCode, string message) : Exception(message)
 {
     public HttpStatusCode StatusCode { get; set; } = statusCode;
 

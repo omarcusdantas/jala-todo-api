@@ -30,4 +30,15 @@ public class TodoController : ControllerBase
         return Ok(todo);
     }
 
+    [HttpPost]
+    [Route("")]
+    [ProducesResponseType(typeof(Todo), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Create([FromBody] Todo todo, [FromServices] ICreateTodo createTodo)
+    {
+
+        var createdTodo = await createTodo.Execute(todo);
+
+        return CreatedAtAction(nameof(Create),"", createdTodo);
+    }
 }

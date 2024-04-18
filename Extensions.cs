@@ -10,5 +10,6 @@ public static class Extensions
         => services
             .AddScoped<IGetTodo, GetTodo>()
             .AddScoped<IGetAllTodos, GetAllTodos>()
+            .AddScoped<ICreateTodo, CreateTodo>()
             .AddScoped<ITodoRepository, TodoRepository>();
 }

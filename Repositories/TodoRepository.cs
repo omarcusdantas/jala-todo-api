@@ -1,9 +1,7 @@
 ﻿using JalaTodoApi.Contracts;
 using JalaTodoApi.Database;
-using JalaTodoApi.Exceptions;
 using JalaTodoApi.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 
 namespace JalaTodoApi.Repositories;
 
@@ -21,21 +19,15 @@ public class TodoRepository(TodoDBContext dBContext) : ITodoRepository
 
     public async Task<bool> Delete(Guid id)
     {
-        var foundTodo = await _dbContext.Todos.FindAsync(id);
-
-        if (foundTodo is null) return false;
-
-        _dbContext.Remove(foundTodo);
+        _dbContext.Remove(id);
         await _dbContext.SaveChangesAsync();
 
         return true;
     }
 
-    public async Task<Todo> Get(Guid id)
+    public async Task<Todo?> Get(Guid id)
     {
         var foundTodo = await _dbContext.Todos.FindAsync(id);
-
-        if (foundTodo is null) throw new ApiException(HttpStatusCode.NotFound, "Todo not found");
 
         return foundTodo;
     }
@@ -47,11 +39,8 @@ public class TodoRepository(TodoDBContext dBContext) : ITodoRepository
         return todos;
     }
 
-    public async Task<Todo> Update(Guid id, Todo todo)
+    public async Task<Todo> Update(Todo todo)
     {
-        var foundTodo = await _dbContext.Todos.FindAsync(id);
-
-        if (foundTodo is null) throw new ApiException(HttpStatusCode.NotFound, "Todo not found");
 
         _dbContext.Update(todo);
         await _dbContext.SaveChangesAsync();

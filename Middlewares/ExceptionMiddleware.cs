@@ -20,7 +20,7 @@ public class ExceptionMiddleware(RequestDelegate next)
     private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)((exception as ApiException)?.StatusCode ?? HttpStatusCode.InternalServerError);
+        context.Response.StatusCode = (int)((exception as CustomException)?.StatusCode ?? HttpStatusCode.InternalServerError);
 
         var jsonResponse = System.Text.Json.JsonSerializer.Serialize(new
         {
