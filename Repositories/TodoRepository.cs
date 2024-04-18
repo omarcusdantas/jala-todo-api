@@ -1,6 +1,9 @@
 ﻿using JalaTodoApi.Contracts;
 using JalaTodoApi.Database;
+using JalaTodoApi.Exceptions;
 using JalaTodoApi.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace JalaTodoApi.Repositories;
 
@@ -16,23 +19,43 @@ public class TodoRepository(TodoDBContext dBContext) : ITodoRepository
         return todo;
     }
 
-    public Task<bool> Delete(Guid id)
+    public async Task<bool> Delete(Guid id)
     {
-        throw new NotImplementedException();
+        var foundTodo = await _dbContext.Todos.FindAsync(id);
+
+        if (foundTodo is null) return false;
+
+        _dbContext.Remove(foundTodo);
+        await _dbContext.SaveChangesAsync();
+
+        return true;
     }
 
-    public Task<Todo> Get(Guid id)
+    public async Task<Todo> Get(Guid id)
     {
-        throw new NotImplementedException();
+        var foundTodo = await _dbContext.Todos.FindAsync(id);
+
+        if (foundTodo is null) throw new ApiException(HttpStatusCode.NotFound, "Todo not found");
+
+        return foundTodo;
     }
 
-    public Task<IEnumerable<Todo>> GetAll()
+    public async Task<IEnumerable<Todo>> GetAll()
     {
-        throw new NotImplementedException();
+        var todos = await _dbContext.Todos.ToListAsync();
+
+        return todos;
     }
 
-    public Task<Todo> Update(Guid id, Todo todo)
+    public async Task<Todo> Update(Guid id, Todo todo)
     {
-        throw new NotImplementedException();
+        var foundTodo = await _dbContext.Todos.FindAsync(id);
+
+        if (foundTodo is null) throw new ApiException(HttpStatusCode.NotFound, "Todo not found");
+
+        _dbContext.Update(todo);
+        await _dbContext.SaveChangesAsync();
+
+        return todo;
     }
 }
