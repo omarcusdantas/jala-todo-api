@@ -4,5 +4,5 @@ namespace JalaTodoApi.Contracts;
 
 public interface ISetTodoAsOverdue
 {
-    Task<Todo> Execute(Guid id);
+    Task<Todo?> Execute(Guid id);
 }

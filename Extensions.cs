@@ -11,5 +11,8 @@ public static class Extensions
             .AddScoped<IGetTodo, GetTodo>()
             .AddScoped<IGetAllTodos, GetAllTodos>()
             .AddScoped<ICreateTodo, CreateTodo>()
+            .AddScoped<IUpdateTodo, UpdateTodo>()
+            .AddScoped<IDeleteTodo, DeleteTodo>()
+            .AddScoped<ISetTodoAsOverdue, SetTodoAsOverdue>()
             .AddScoped<ITodoRepository, TodoRepository>();
 }

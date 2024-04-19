@@ -14,6 +14,7 @@ builder.Services.AddTodoServices();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddDbContext<TodoDBContext>(o => o.UseInMemoryDatabase("tododb"));
 
 var app = builder.Build();

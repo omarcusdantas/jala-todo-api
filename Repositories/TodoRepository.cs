@@ -19,7 +19,11 @@ public class TodoRepository(TodoDBContext dBContext) : ITodoRepository
 
     public async Task<bool> Delete(Guid id)
     {
-        _dbContext.Remove(id);
+        var todo = await _dbContext.Todos.FindAsync(id);
+
+        if (todo is null) return false;
+
+        _dbContext.Remove(todo);
         await _dbContext.SaveChangesAsync();
 
         return true;
@@ -39,10 +43,17 @@ public class TodoRepository(TodoDBContext dBContext) : ITodoRepository
         return todos;
     }
 
-    public async Task<Todo> Update(Todo todo)
+    public async Task<Todo?> Update(Guid id, Todo updateTodo)
     {
+        var todo = await _dbContext.Todos.FindAsync(id);
+        if (todo is null) return null;
 
-        _dbContext.Update(todo);
+        todo.DueDate = updateTodo.DueDate;
+        todo.Overdue = updateTodo.Overdue;
+        todo.Description = updateTodo.Description;
+        todo.Title = updateTodo.Title;
+        todo.UpdatedAt = updateTodo.UpdatedAt;
+        
         await _dbContext.SaveChangesAsync();
 
         return todo;

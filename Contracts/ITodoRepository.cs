@@ -10,7 +10,7 @@ public interface ITodoRepository
 
     Task<Todo> Create(Todo todo);
 
-    Task<Todo> Update(Todo todo);
+    Task<Todo?> Update(Guid id, Todo todo);
 
     Task<bool> Delete(Guid id);
 }

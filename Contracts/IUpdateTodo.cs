@@ -4,5 +4,5 @@ namespace JalaTodoApi.Contracts;
 
 public interface IUpdateTodo
 {
-    Task<Todo> Execute(Guid id, Todo todo);
+    Task<Todo?> Execute(Guid id, Todo todo);
 }

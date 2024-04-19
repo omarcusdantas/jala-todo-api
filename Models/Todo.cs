@@ -10,7 +10,7 @@ public class Todo
 
     public DateTime DueDate { get; set; }
 
-    public bool OverDue { get; set; } = false;
+    public bool Overdue { get; set; } = false;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

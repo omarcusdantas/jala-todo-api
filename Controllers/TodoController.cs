@@ -1,11 +1,13 @@
-﻿using JalaTodoApi.Contracts;
+﻿using AutoMapper;
+using JalaTodoApi.Contracts;
+using JalaTodoApi.Dtos;
 using JalaTodoApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JalaTodoApi.Controllers;
 
 [ApiController]
-[Tags("Todo")]
+[Tags("Todos")]
 [Route("api/v1/todos")]
 public class TodoController : ControllerBase
 {
@@ -34,10 +36,12 @@ public class TodoController : ControllerBase
     [Route("")]
     [ProducesResponseType(typeof(Todo), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-    public async Task<IActionResult> Create([FromBody] Todo todo, [FromServices] ICreateTodo createTodo)
+    public async Task<IActionResult> Create([FromBody] CreateTodoDto todo,
+        [FromServices] ICreateTodo createTodo, [FromServices] IMapper mapper)
     {
+        var mappedTodo = mapper.Map<Todo>(todo);
 
-        var createdTodo = await createTodo.Execute(todo);
+        var createdTodo = await createTodo.Execute(mappedTodo);
 
         return CreatedAtAction(nameof(Create),"", createdTodo);
     }
@@ -47,9 +51,12 @@ public class TodoController : ControllerBase
     [ProducesResponseType(typeof(Todo), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Update([FromRoute] Guid todoId, [FromBody] Todo todo, [FromServices] IUpdateTodo updateTodo)
+    public async Task<IActionResult> Update([FromRoute] Guid todoId, [FromBody] UpdateTodoDto todo, 
+        [FromServices] IUpdateTodo updateTodo, [FromServices] IMapper mapper)
     {
-        var updatedTodo = await updateTodo.Execute(todoId, todo);
+        var mappedTodo = mapper.Map<Todo>(todo);
+
+        var updatedTodo = await updateTodo.Execute(todoId, mappedTodo);
 
         return Ok(updatedTodo);
     }
