@@ -11,14 +11,9 @@ public class CreateTodo(ITodoRepository todoRepository) : ICreateTodo
 
     public Task<Todo> Execute(Todo todo)
     {
-        if (todo.DueDate < todo.CreatedAt && todo.OverDue == false)
+        if (todo.DueDate < DateTime.UtcNow)
         {
-            throw new CustomException(HttpStatusCode.BadRequest, "Overdue has to be true, since the time to it is over.");
-        }
-
-        if (todo.DueDate >= todo.CreatedAt && todo.OverDue == true)
-        {
-            throw new CustomException(HttpStatusCode.BadRequest, "Overdue has to be false, since the time to do it is not over.");
+            throw new CustomException(HttpStatusCode.UnprocessableEntity, "DueDate is invalid. A Todo can't be created as overdue");
         }
 
         return _repository.Create(todo);

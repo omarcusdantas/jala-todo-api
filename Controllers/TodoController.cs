@@ -33,12 +33,46 @@ public class TodoController : ControllerBase
     [HttpPost]
     [Route("")]
     [ProducesResponseType(typeof(Todo), StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> Create([FromBody] Todo todo, [FromServices] ICreateTodo createTodo)
     {
 
         var createdTodo = await createTodo.Execute(todo);
 
         return CreatedAtAction(nameof(Create),"", createdTodo);
+    }
+
+    [HttpPut]
+    [Route("{todoId:guid:required}")]
+    [ProducesResponseType(typeof(Todo), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Update([FromRoute] Guid todoId, [FromBody] Todo todo, [FromServices] IUpdateTodo updateTodo)
+    {
+        var updatedTodo = await updateTodo.Execute(todoId, todo);
+
+        return Ok(updatedTodo);
+    }
+
+    [HttpDelete]
+    [Route("{todoId:guid:required}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Delete([FromRoute] Guid todoId, [FromServices] IDeleteTodo deleteTodo)
+    {
+        await deleteTodo.Execute(todoId);
+
+        return NoContent();
+    }
+
+    [HttpPatch]
+    [Route("{todoId:guid}/overdue")]
+    [ProducesResponseType(typeof(Todo), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> SetAsOverdue([FromRoute] Guid todoId, [FromServices] ISetTodoAsOverdue setTodoAsOverdue)
+    {
+        var todo = await setTodoAsOverdue.Execute(todoId);
+
+        return Ok(todo);
     }
 }
