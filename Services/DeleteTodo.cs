@@ -10,11 +10,11 @@ public class DeleteTodo(ITodoRepository todoRepository) : IDeleteTodo
     private readonly ITodoRepository _repository = todoRepository;
 
     public async Task<bool> Execute(Guid id)
-    {
-        var foundTodo = await _repository.Get(id);
+    {   
+        var isDeleted = await _repository.Delete(id);
 
-        if (foundTodo is null) throw new CustomException(HttpStatusCode.NotFound, "Todo not found");
+        if (isDeleted == false) throw new CustomException(HttpStatusCode.NotFound, "Todo not found");
 
-        return await _repository.Delete(id);
+        return isDeleted;
     }
 }
